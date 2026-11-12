@@ -264,7 +264,7 @@ code{font:400 .84em var(--mono);background:var(--w-2);border:1px solid var(--w-l
       "       - uses: actions/setup-go@v5",
       "       - name: Test",
       "-        run: gotestsum ./...",
-      "+        run: gotestsum ./... -- -skip TestInvoiceExport",
+      "+        run: gotestsum ./... -skip TestInvoiceExport",
       "       - name: Lint"],x:[4]}
   ];
   FILES.forEach(function(f){f.add=f.d.filter(function(l){return l[0]==="+"}).length;f.del=f.d.filter(function(l){return l[0]==="-"}).length});
@@ -295,7 +295,7 @@ code{font:400 .84em var(--mono);background:var(--w-2);border:1px solid var(--w-l
     var h='<div class="main"><div class="top"><b>Fix invoice rounding</b><span class="pill">tallyfold/billing</span></div><div class="msgs">';
     h+='<div class="you"><small>Maya Ortiz</small>Invoice totals are off by a cent when prices have 3 decimals. Fix the rounding in <code>internal/billing</code> and add tests.</div>';
     h+='<div class="agent'+(st.asked?' prev':'')+'"><span class="who">Agent</span><p>Done. <span class="hide-s">Each line was rounded before adding, so 3-decimal prices drifted. Totals now add exact amounts and round once, ties to even. </span>Added '+CASES+' test cases. Tests pass.</p>'+
-       '<div class="term"><div class="hide-s">$ gotestsum ./...</div><div>'+e(runLine(SKIP_RUN))+'</div></div></div>';
+       '<div class="term"><div class="hide-s">$ gotestsum ./... -skip TestInvoiceExport</div><div>'+e(runLine(SKIP_RUN))+'</div></div></div>';
     if(st.asked){
       h+='<div class="you"><small>Maya Ortiz</small>'+e(ASK)+'</div>';
       h+='<div class="agent"><span class="who">Agent</span><p><code>TestInvoiceExport</code> timed out once while I worked (it calls the PDF service), so I skipped it in CI. That was outside the task. I reverted <code>'+e(short(OUT.p))+'</code> and ran the full suite.</p>'+
@@ -338,7 +338,7 @@ code{font:400 .84em var(--mono);background:var(--w-2);border:1px solid var(--w-l
   }
   function narrate(){
     var n=document.getElementById("now"), cls="", b, s, o=short(OUT.p);
-    if(wrong()){cls="bad";b="Heads up: that PR also changes "+o+".";s="It skips TestInvoiceExport on every branch, not just this one. That is how the run said tests pass. Undo, then ask the agent."}
+    if(wrong()){cls="bad";b="Heads up: that PR also changes "+o+".";s="It skips TestInvoiceExport on every branch, not just this one. That is how the agent's run and CI both say tests pass. Undo, then ask the agent."}
     else if(st.pr&&st.asked){cls="ok";b="Approved: a PR with only what the task asked for.";s="The reviewer sees why "+o+" was touched and that it was put back."}
     else if(st.pr){cls="ok";b="Approved without "+o+".";s="If TestInvoiceExport really is slow, CI will show it on the PR, where everyone can see it."}
     else if(st.asked){cls="ok";b="The agent explained and put "+o+" back.";s="Every test ran this time. Now approve."}
